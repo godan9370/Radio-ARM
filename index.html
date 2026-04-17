@@ -28,101 +28,31 @@
     justify-content: space-between;
     align-items: flex-end;
   }
-  .title {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.35em;
-  }
-  .title .lg {
-    display: block;
-    font-size: 32px;
-    font-weight: 400;
-    letter-spacing: 0.15em;
-    margin-top: 4px;
-  }
-  .meta {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    text-align: right;
-    line-height: 1.6;
-  }
-  #chat {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 24px;
-  }
-  .msg {
-    margin-bottom: 14px;
-    font-size: 13px;
-    line-height: 1.45;
-  }
-  .who {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    margin-bottom: 2px;
-    opacity: 0.7;
-  }
+  .title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.35em; }
+  .title .lg { display: block; font-size: 32px; font-weight: 400; letter-spacing: 0.15em; margin-top: 4px; }
+  .meta { font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em; text-align: right; line-height: 1.6; }
+  #chat { flex: 1; overflow-y: auto; padding: 16px 24px; }
+  .msg { margin-bottom: 14px; font-size: 13px; line-height: 1.45; }
+  .who { font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 2px; opacity: 0.7; }
   .me .who { color: #000; opacity: 1; }
   .text { white-space: pre-wrap; }
   .me { text-align: right; }
-  .system {
-    text-align: center;
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    opacity: 0.5;
-    margin: 24px 0;
-  }
-  form {
-    display: flex;
-    border-top: 1px solid #111;
-    background: #d9d9d4;
-  }
+  .system { text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3em; opacity: 0.5; margin: 24px 0; }
+  form { display: flex; border-top: 1px solid #111; background: #d9d9d4; }
   input {
-    flex: 1;
-    border: 0;
-    background: transparent;
-    padding: 18px 24px;
-    font-family: inherit;
-    font-size: 13px;
-    color: #111;
-    outline: none;
-    letter-spacing: 0.02em;
+    flex: 1; border: 0; background: transparent; padding: 18px 24px;
+    font-family: inherit; font-size: 13px; color: #111; outline: none; letter-spacing: 0.02em;
   }
-  input::placeholder {
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    font-size: 10px;
-    color: #555;
-  }
+  input::placeholder { text-transform: uppercase; letter-spacing: 0.3em; font-size: 10px; color: #555; }
   button {
-    border: 0;
-    border-left: 1px solid #111;
-    background: #111;
-    color: #d9d9d4;
-    padding: 0 24px;
-    font-family: inherit;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.3em;
-    cursor: pointer;
+    border: 0; border-left: 1px solid #111; background: #111; color: #d9d9d4;
+    padding: 0 24px; font-family: inherit; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.3em; cursor: pointer;
   }
   button:hover { background: #000; }
-  .typing {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    opacity: 0.6;
-    padding: 4px 0;
-    height: 18px;
-  }
-  .sticker {
-    font-size: 56px;
-    line-height: 1;
-    margin-top: 4px;
-  }
+  .typing { font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; opacity: 0.6; padding: 4px 0; height: 18px; }
+  .sticker { margin-top: 4px; }
+  .sticker svg { display: block; }
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-thumb { background: #111; }
 </style>
@@ -140,7 +70,7 @@
   </header>
 
   <div id="chat">
-    <div class="system">— channel open —</div>
+    <div class="system">&mdash; channel open &mdash;</div>
   </div>
 
   <div class="typing" id="typing"></div>
@@ -151,340 +81,489 @@
   </form>
 
 <script>
-const chat = document.getElementById('chat');
-const form = document.getElementById('form');
-const input = document.getElementById('input');
-const typing = document.getElementById('typing');
+var chat = document.getElementById("chat");
+var form = document.getElementById("form");
+var input = document.getElementById("input");
+var typing = document.getElementById("typing");
 
-const NPCS = {
-  nessie: {
-    name: "Nessie Frangos",
-    pool: [
-      "fkkk", "fk this is so good", "omg", "love it all", "give it a crack",
-      "tiktok phonk is my new lock in genre", "we need to collectively lift for memos",
-      "is the jury still out on nac btw", "bossa nova", "funk carioca",
-      "yeah whats the hold up", "dress as your daylist", "revit beamer core",
-      "some tolerance for different tastes", "good work", "proud of u",
-      "btw we dropped stocks quick hey", "this is wonderful again",
-      "i corroborate this observation", "photos etc", "MRA, affiliated but separate",
-      "Charles dickens is the call", "made by supreme labubu leader",
-      "fk da sun", "Jammmmmmy dodgers", "elite jokesters", "slayfam",
-      "ARK GOLDEN SHOWER KING", "goddammit i thought i had figured it out",
-      "should i get Kirsten to review", "BIG + GRUNTY", "Big and Grunty",
-      "going to try use that as much as i can", "DA GOLDEN HAMMA",
-      "ratepayers or something idk", "HEEEERRRESSS TOMMY",
-      "Smile harder with your eyes Nessie!", "Art of the deal",
-      "I cooked it a bit too much", "FULL BODY no way",
-      "SUNDAY BEST ONLY GODDAMMIT", "FKN KEYBOARD\\", "go nut", "soz",
-      "we are a clean cut architectus type place ready to be bought by architectus",
-      "release the files", "classic TK brutality", "bout time",
-      "yeee brooooo kanyeee broooo", "Nice circle back",
-      "kanye spotted at gold coast music hall", "the best all staff thread",
-      "chedz gave me illness", "mcdougall looks like hes had work done",
-      "vamooooo", "JJ vetoed my bad bunny backing track",
-      "CAR ACCIDENTS GALORE", "mean streets on the goldie",
-      "Classic Chris maximising shareholder value", "who dafuq are all these ppl visiting?",
-      "oh rivetting", "tfw the employee accepts not getting a pay rise",
-      "nads get that bag", "i feel so vulnerable in this new spot",
-      "lucky i am a model professional and only ever do work",
-      "bruz spelling pls", "gatekeep how easy it is i need to keep my job bro",
-      "release the row names", "disappearing the disappeared people",
-      "making sure our chats are clean"
-    ]
-  },
-  tom: {
-    name: "Tom Jones",
-    pool: [
-      "bargain", "Brutal", "no.", "I lean more than stand",
-      "I threw them in the bin. TimTams are back.", "cool man.",
-      "I'll give you a signed copy if you ask nicely", "glorious",
-      "it's like they really know me", "Easter break though",
-      "I'm vibing a pub burger", "something big and beefy",
-      "Sounds like a slur", "uncanny", "beautiful shot",
-      "put that one in our submission for trump tower GC",
-      "m8.", "what if we all chip in?", "does that mean footwear police again?",
-      "can I just use neessie's too?", "Gen X talking to Gen Y about Gen Z?",
-      "i thought his visa was revoked ...", "he's not wrong",
-      "isn't that everyone?", "and it's a damn shame too",
-      "hot", "¯\\_(ツ)_/¯"
-    ]
-  },
-  ryan: {
-    name: "Ryan Poppins",
-    pool: [
-      "Dan Go for President", "can't afford not to", "i didn't even know",
-      "thats actually a decent get the memo",
-      "For christs sake Liam! What is the latest on Rory at the masters?!",
-      "i feel seen and attacked at the same time",
-      "massive shout out to whoever snuck the wagon wheels into the biscuit tin rotation. you deserve to be crowned for that move",
-      "you've had a good run mate but I just talked to HR and you are outta here. clean the desk up",
-      "neil only knows the thumbs up emoji", "this is his version of slayfam",
-      "Have an NM round", "Nessie wins ARM $65,000,000,000 project",
-      "Nessie promoted to overload director", "this is my new CV",
-      "Jam Dawgs", "preach", "jam dawgs got jam dogged",
-      "i blame woolies, not you Meg", "phwoar!",
-      "we endorse frugality over here in Fury Row",
-      "Whatver didn't get stuffed into my pockets",
-      "the DL smile gets me", "you had me at pink jam biscuit",
-      "but agree, def not sold on them", "ya know where to find me today",
-      "Ness that is one of the most horrific desks for privacy. exposed at all angles",
-      "Lucy pointing at shit is a whole sub-genre",
-      "benajamin button-ing. he is gonna resurge back into ARM and back to the glory days",
-      "straight off the woollies website too", "huzzah"
-    ]
-  },
-  nadia: {
-    name: "Nadia Poppen",
-    pool: [
-      "thanks all", "-.-", "DOES ANYONE HAVE A PHOTO OF TOM STANDING PLS",
-      "just archiving this", "the original crop of the image",
-      "is the jury still out on nac btw?", "yes", "omg", "thanks Ax",
-      "them golden digestives", "bro", "m8.", "yeesh", "allstaff that ness",
-      "sydney benito house", "ill do it", "political on allstaff today",
-      "whoops", "most sane orange cat behaviour",
-      "chris ghosting the chat but not ghosting the ears with his giggling",
-      "suck it u guys", "my anthem", "that's brown dan",
-      "gatekeep how easy it is i need to keep my job bro",
-      "where are we going after?", "i can only rly stay for 1"
-    ]
-  },
-  axeris: {
-    name: "Axeris Sondyre",
-    pool: [
-      "Why does this look like I'm being lured into a kill room",
-      "He's saying what we're all thinking",
-      "Mood was good coming out of the in-person meeting 2 weeks back but don't think we've heard anything since",
-      "YT Music users discrimination",
-      "Oh I'm very much on Montagem-tok as well",
-      "not like KFC Portugal tiktok, that shit slaps",
-      "they'll totally go for an ARM tiktok and it'll be the cringiest shit ever",
-      "I'm in", "I knew he could do it", "early may",
-      "meeting transcripts hit different", "put her on the big screen",
-      "Louis XVI and Robespierre, 21 January 1793 (colourised)",
-      "what are these ...", "artwork accepted",
-      "I can't tell which generation does thumbs ups genuinely and which does them pass-agg",
-      "Neil piping up about making the trivia architecture related then not even gonna be here",
-      "I've got just the powerpoint image to accompany that round...",
-      "ye olde carpark smell like weewee", "ARK +29.1% HAHAHAHAHAHA",
-      "how is it even up for u, it should be in deployment...",
-      "Nessie I'm confiscating your keyboard, no more typing for you",
-      "omg its using Radio ARM to define value",
-      "KT can AI but AI could never KT",
-      "get her to do one for each project",
-      "teams gifs didn't understand that I wanted an animation of FMC",
-      "imo just repurpose the flowery language in the studio launch, it'll fit",
-      "I like that the Nessie text got smaller",
-      "Can't wait to see how this makeup artist yassifes the Directors",
-      "update on yassification?", "Phillipe got some sick matte bald head makeup",
-      "looked lit", "Haters will say it's AI",
-      "too easy", "Aaron opening the blinds at 4pm",
-      "He's an empath, he's anti-patient deterioration",
-      "Stalin-level precision", "chicken nuggets",
-      "not the best place, the ONLY place", "wild if true",
-      "4pm for standard drinks, what time are shots?",
-      "Going to need Rocco's CV for inclusion in the project",
-      "I'm literally cry laughing", "Launching ARM TikTok account and it's Andrea x Neil dancing in front of buildings, let's go",
-      "sign? girl that's ur face", "that's a Dan Go question",
-      "or alternatively.. Dan's arch-rival.. Dan Stop",
-      "McDougall split", "Also Neil is making his LinkedIn debut soon",
-      "It's never too late to hustle",
-      "Lots of foot pics, feel like I should be on a paid subscriber tier to see those",
-      "It's a fcking SAUNA in that lobby area rn",
-      "sounds like how 95% of my life's most embarrassing moments start",
-      "Everyone wear green outfits for the profile pic shot so you can be appropriately green screen'd",
-      "Further unofficial update re: staff photos, looks like it might only be the folks used in bids who will get one soz",
-      "you did what", "in a sandwich of bread or forming a sandwich with the biscuits?",
-      "very good, continue on", "this is GOOD", "wallpaper",
-      "CHEDZ", "How could I forget the TOP TIER biscuit??",
-      "Deja vu", "Where'd call kick on?",
-      "what a sentence", "Need to make that the video playing on the big screen",
-      "Are People Still Motivated By Creating Shareholder Value"
-    ]
-  },
-  liam: {
-    name: "Liam McKiernan",
-    pool: [
-      "Fuckin hell man", "hell yeah", "Pad Thai",
-      "happy to go back under my rock", "tried to broaden my horizons",
-      "gave it a go", "Them anzac biscuits hittin' diff",
-      "But Rory is now leading -12 going into the 3rd day of the masters",
-      "he dedicated the win to all the warriors on level 27 at 303 Collins Street",
-      "Let me know where the gang ends up",
-      "First Immigration, now the youth of Melbourne taking pops at me",
-      "I gotta be in Prahran for like 6.30 but sounds good",
-      "I can get around Funk Carioca", "who thought this slide was a good idea now",
-      "Thak you Ark", "great to know", "Last call for this, going to grab tickets today",
-      "am I the only one who thinks they suck?",
-      "holding your company to ransom", "get'em quick",
-      "I need a map", "yea there has to be a clause there right?",
-      "missed the linkedin boat by about 5 years", "never too late tho",
-      "Big and Grunty", "yeah yous are all looking grrrreat",
-      "send a selfie steve-o!", "El Presidente",
-      "That Speakerboxx/Love Below is a classic",
-      "hahahaha goes pretty well ehy", "one song and one song only",
-      "Don't show up to the trap with these", "one would assume yes"
-    ]
-  },
-  isabella: {
-    name: "Isabella Konig",
-    pool: [
-      "revs?", "only on a Tuesday bruv", "Im down",
-      "I already got one mate. Im selling them on Ebay for $5 a pop",
-      "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I've seen it",
-      "and then translated back by us doing our best mario impression",
-      "i second this", "omg what is this? hahahaha",
-      "I tried it. Definitely not for me. Glad you like it though ness",
-      "hahahhaa", "Will be at FSS in like 40 mins or so",
-      "Are u guys going for a drink after work?",
-      "how long u guys gonna be out tonight for dranks?",
-      "was i nom for the project?", "so mysterious ness",
-      "omg nads u look so nice", "these photos are actually great",
-      "no one be looking at mine though today thanks",
-      "I timtams do we have some?",
-      "andrea and lils ones are sooo good", "the friendly ones are great",
-      "Im meeting a friend later on in city"
-    ]
-  },
-  rhiannon: {
-    name: "Rhiannon Ruediger",
-    pool: [
-      "Princess", "Those are actually for everyone except Tom",
-      "Do we put this with a photo of you in get the memo?",
-      "I wont be able to but I would like a summary written by you both then translated with AI",
-      "Skull", "clicked randomise, and..",
-      "Cake!", "PSA: There will be cakes in the kitchen at 11:15 to celebrate the April birthdays!",
-      "Solo party for Liam 🎉", "Nope! I for one, am not used in bids",
-      "Do I say.... discrimination!!", "Toe",
-      "ooft Thats like someone here spelling it architetcure",
-      "Can you please pop them into a plastic tub to avoid the smell permeating the clothes hanging in there?"
-    ]
-  },
-  steven: {
-    name: "Steven Baleva",
-    pool: ["🥲", "lol", "yeah nah",
-      "jealous you all got a photoshoot",
-      "i was hesitant to send through a selfie knowing all of your capabilities with ai"]
-  },
-  chris: {
-    name: "Chris Buchhorn",
-    pool: [
-      "hey - I'm thinking about drinks at fifty five after work if you're up for it/available",
-      "anyone keen for a quick one", "it's AI", "monties",
-      "OK, Nads is cooked", "shared responsibility", "I endorse this message",
-      "Thursday is better", "for me at least",
-      "ah, ok - I thought that was a question",
-      "haha - salad is nothing", "Fifty five",
-      "an extended lunch came with consequences - who knew!",
-      "gotta support those struggling corprates",
-      "oui - most are away from computers atm though",
-      "I'll be braving into the night after too", "I was otherwise engage"
-    ]
-  },
-  meg: {
-    name: "Meg O'Halloran",
-    pool: [
-      "Thanks Rhi", "THANKS RYAN", "CAPS MOOD TODAY",
-      "whats everyones fave biscuits", "whats monties",
-      "dunno if they exist at woolies", "they slap actually ryan",
-      "Ryan saving the company", "Chris ghosting the chat",
-      "I dunno about those pink Jam biscuits",
-      "just popped them in the container",
-      "wait what are they all gone? I literally put them about approx. 2min ago",
-      "my mate came back", "excuse me", "3pm drinks today",
-      "scrap that guys", "I know all about architecture guys",
-      "I reckon I could start putting drinks out",
-      "Koulouriakia Slam? Not exactly the same ring to it as timtam slam",
-      "Traveller ched", "sorry the J — THESE WERE OUT OF STOCK SOZZZZ"
-    ]
-  },
-  jenny: {
-    name: "Jenny Watson",
-    pool: [
-      "Jawad's preso starting now in Blue Room, drinks & snacks included!",
-      "A Creature visited today",
-      "Peter's mouse", "Update from home: my orange boy drinking his Special Tea* while reclining.",
-      "can you please record watto"
-    ]
-  },
-  jeremy: {
-    name: "Jeremy Stewart",
-    pool: [
-      "i knew that guy was magic", "the force is strong that one with",
-      "you sure he isn't a doctor?",
-      "shouldn't victor be inside in a darkened room convalescing - outrageous",
-      "sure he is - is he also strengthening his hand by lifting glasses of vodka?",
-      "does anyone else get a headache / visual aura from the glare off their desk in the afternoon"
-    ]
-  },
-  howard: {
-    name: "Howard Raggatt",
-    pool: [
-      "Can we do it another day", "Too", "Honorary"
-    ]
-  },
-  ark: {
-    name: "Ark Belov",
-    pool: [
-      "Buy 1 get 1 free at the new ban mi shop on Flinders lne",
-      "Whoops that's tomorrow",
-      "So thats buy 1 get 1 free, I'd expect a sellout and a line down the street around lunchtime"
-    ]
-  },
-  aaron: {
-    name: "Aaron Poupard",
-    pool: [
-      "Koulouriakia Slam?",
-      "Not exactly the same ring to it as timtam slam"
-    ]
-  },
-  neil: {
-    name: "Neil Masterton",
-    pool: [".;'", "👍", "👍", "👍"]
-  },
-  svetlana: {
-    name: "Svetlana Glavenko",
-    pool: [
-      "Looks like he is Almighty Lord",
-      "Babies waiting for parents",
-      "Relaxation yoga", "Chilling outside",
-      "Talking to daddy",
-      "Victor is practicing some convalescence breathing techniques outside, new approach to dealing with illness.",
-      "Not vodka, cognac, that's his preference, or rose."
-    ]
-  },
-  lucy: {
-    name: "Lucy Carruthers",
-    pool: [
-      "Roo vs Boo* *my brother's cat", "Surely an accident?",
-      "Can confirm not intentional lol", "Ok need to send a new one tmrw haha"
-    ]
-  },
-  andrew: {
-    name: "Andrew Lilleyman",
-    pool: [
-      "stay very still", "Who's the prey… Peter?", "its lap time."
-    ]
-  },
-  kirsten: {
-    name: "Kirsten Trengove",
-    pool: ["Poppet!"]
-  },
-  hannah: {
-    name: "Hannah Kuek",
-    pool: ["🌈"]
-  }
+var NPCS = {
+  nessie: { name: "Nessie Frangos", pool: [
+    "fkkk","fk this is so good","omg","love it all","give it a crack",
+    "tiktok phonk is my new lock in genre","we need to collectively lift for memos",
+    "is the jury still out on nac btw","bossa nova","funk carioca",
+    "yeah whats the hold up","dress as your daylist","revit beamer core",
+    "some tolerance for different tastes","good work","proud of u",
+    "btw we dropped stocks quick hey","this is wonderful again",
+    "i corroborate this observation","photos etc","MRA, affiliated but separate",
+    "Charles dickens is the call","made by supreme labubu leader","fk da sun",
+    "Jammmmmmy dodgers","elite jokesters","slayfam","ARK GOLDEN SHOWER KING",
+    "goddammit i thought i had figured it out","should i get Kirsten to review",
+    "BIG + GRUNTY","Big and Grunty","going to try use that as much as i can",
+    "DA GOLDEN HAMMA","ratepayers or something idk","HEEEERRRESSS TOMMY",
+    "Smile harder with your eyes Nessie!","Art of the deal","I cooked it a bit too much",
+    "FULL BODY no way","SUNDAY BEST ONLY GODDAMMIT","FKN KEYBOARD","go nut","soz",
+    "we are a clean cut architectus type place ready to be bought by architectus",
+    "release the files","classic TK brutality","bout time",
+    "yeee brooooo kanyeee broooo","Nice circle back",
+    "kanye spotted at gold coast music hall","the best all staff thread",
+    "chedz gave me illness","mcdougall looks like hes had work done","vamooooo",
+    "JJ vetoed my bad bunny backing track","CAR ACCIDENTS GALORE","mean streets on the goldie",
+    "Classic Chris maximising shareholder value","who dafuq are all these ppl visiting?",
+    "oh rivetting","tfw the employee accepts not getting a pay rise","nads get that bag",
+    "i feel so vulnerable in this new spot","lucky i am a model professional and only ever do work",
+    "bruz spelling pls","gatekeep how easy it is i need to keep my job bro",
+    "release the row names","disappearing the disappeared people","making sure our chats are clean"
+  ]},
+  tom: { name: "Tom Jones", pool: [
+    "bargain","Brutal","no.","I lean more than stand","I threw them in the bin. TimTams are back.",
+    "cool man.","I will give you a signed copy if you ask nicely","glorious",
+    "it is like they really know me","Easter break though","I am vibing a pub burger",
+    "something big and beefy","Sounds like a slur","uncanny","beautiful shot",
+    "put that one in our submission for trump tower GC","m8.","what if we all chip in?",
+    "does that mean footwear police again?","can I just use neessies too?",
+    "Gen X talking to Gen Y about Gen Z?","i thought his visa was revoked ...",
+    "he is not wrong","isn't that everyone?","and it is a damn shame too","hot"
+  ]},
+  ryan: { name: "Ryan Poppins", pool: [
+    "Dan Go for President","cant afford not to","i didn't even know",
+    "thats actually a decent get the memo",
+    "For christs sake Liam! What is the latest on Rory at the masters?!",
+    "i feel seen and attacked at the same time",
+    "massive shout out to whoever snuck the wagon wheels into the biscuit tin rotation. you deserve to be crowned for that move",
+    "you have had a good run mate but I just talked to HR and you are outta here. clean the desk up",
+    "neil only knows the thumbs up emoji","this is his version of slayfam",
+    "Have an NM round","Nessie wins ARM $65,000,000,000 project",
+    "Nessie promoted to overload director","this is my new CV",
+    "Jam Dawgs","preach","jam dawgs got jam dogged","i blame woolies, not you Meg",
+    "phwoar!","we endorse frugality over here in Fury Row",
+    "Whatver did not get stuffed into my pockets","the DL smile gets me",
+    "you had me at pink jam biscuit","but agree, def not sold on them",
+    "ya know where to find me today",
+    "Ness that is one of the most horrific desks for privacy. exposed at all angles",
+    "Lucy pointing at shit is a whole sub-genre",
+    "benajamin button-ing. he is gonna resurge back into ARM and back to the glory days",
+    "straight off the woollies website too","huzzah"
+  ]},
+  nadia: { name: "Nadia Poppen", pool: [
+    "thanks all","-.-","DOES ANYONE HAVE A PHOTO OF TOM STANDING PLS",
+    "just archiving this","the original crop of the image",
+    "is the jury still out on nac btw?","yes","omg","thanks Ax",
+    "them golden digestives","bro","m8.","yeesh","allstaff that ness",
+    "sydney benito house","ill do it","political on allstaff today","whoops",
+    "most sane orange cat behaviour",
+    "chris ghosting the chat but not ghosting the ears with his giggling",
+    "suck it u guys","my anthem","that is brown dan",
+    "gatekeep how easy it is i need to keep my job bro",
+    "where are we going after?","i can only rly stay for 1"
+  ]},
+  axeris: { name: "Axeris Sondyre", pool: [
+    "Why does this look like I am being lured into a kill room",
+    "He is saying what we are all thinking",
+    "Mood was good coming out of the in-person meeting 2 weeks back but dont think we have heard anything since",
+    "YT Music users discrimination","Oh I am very much on Montagem-tok as well",
+    "not like KFC Portugal tiktok, that shit slaps",
+    "they will totally go for an ARM tiktok and it will be the cringiest shit ever",
+    "I am in","I knew he could do it","early may","meeting transcripts hit different",
+    "put her on the big screen","Louis XVI and Robespierre, 21 January 1793 (colourised)",
+    "what are these ...","artwork accepted",
+    "I cant tell which generation does thumbs ups genuinely and which does them pass-agg",
+    "Neil piping up about making the trivia architecture related then not even gonna be here",
+    "I have got just the powerpoint image to accompany that round...",
+    "ye olde carpark smell like weewee","ARK +29.1% HAHAHAHAHAHA",
+    "how is it even up for u, it should be in deployment...",
+    "Nessie I am confiscating your keyboard, no more typing for you",
+    "omg its using Radio ARM to define value","KT can AI but AI could never KT",
+    "get her to do one for each project",
+    "teams gifs did not understand that I wanted an animation of FMC",
+    "imo just repurpose the flowery language in the studio launch, it will fit",
+    "I like that the Nessie text got smaller",
+    "Cant wait to see how this makeup artist yassifes the Directors",
+    "update on yassification?","Phillipe got some sick matte bald head makeup","looked lit",
+    "Haters will say it is AI","too easy","Aaron opening the blinds at 4pm",
+    "He is an empath, he is anti-patient deterioration","Stalin-level precision",
+    "chicken nuggets","not the best place, the ONLY place","wild if true",
+    "4pm for standard drinks, what time are shots?",
+    "Going to need Roccos CV for inclusion in the project","I am literally cry laughing",
+    "Launching ARM TikTok account and it is Andrea x Neil dancing in front of buildings, lets go",
+    "sign? girl that is ur face","that is a Dan Go question",
+    "Dans arch-rival.. Dan Stop","McDougall split",
+    "Also Neil is making his LinkedIn debut soon","It is never too late to hustle",
+    "Lots of foot pics, feel like I should be on a paid subscriber tier to see those",
+    "It is a fcking SAUNA in that lobby area rn",
+    "sounds like how 95% of my lifes most embarrassing moments start",
+    "Everyone wear green outfits for the profile pic shot so you can be appropriately green screened",
+    "Further unofficial update re: staff photos, looks like it might only be the folks used in bids who will get one soz",
+    "you did what","in a sandwich of bread or forming a sandwich with the biscuits?",
+    "very good, continue on","this is GOOD","wallpaper","CHEDZ",
+    "How could I forget the TOP TIER biscuit??","Deja vu","Whered call kick on?",
+    "what a sentence","Need to make that the video playing on the big screen"
+  ]},
+  liam: { name: "Liam McKiernan", pool: [
+    "Fuckin hell man","hell yeah","Pad Thai","happy to go back under my rock",
+    "tried to broaden my horizons","gave it a go","Them anzac biscuits hittin diff",
+    "But Rory is now leading -12 going into the 3rd day of the masters",
+    "he dedicated the win to all the warriors on level 27 at 303 Collins Street",
+    "Let me know where the gang ends up",
+    "First Immigration, now the youth of Melbourne taking pops at me",
+    "I gotta be in Prahran for like 6.30 but sounds good",
+    "I can get around Funk Carioca","who thought this slide was a good idea now",
+    "Thak you Ark","great to know","Last call for this, going to grab tickets today",
+    "am I the only one who thinks they suck?","holding your company to ransom",
+    "getem quick","I need a map","yea there has to be a clause there right?",
+    "missed the linkedin boat by about 5 years","never too late tho","Big and Grunty",
+    "yeah yous are all looking grrrreat","send a selfie steve-o!","El Presidente",
+    "That Speakerboxx/Love Below is a classic","hahahaha goes pretty well ehy",
+    "one song and one song only","Dont show up to the trap with these","one would assume yes"
+  ]},
+  isabella: { name: "Isabella Konig", pool: [
+    "revs?","only on a Tuesday bruv","Im down",
+    "I already got one mate. Im selling them on Ebay for $5 a pop",
+    "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I have seen it",
+    "and then translated back by us doing our best mario impression",
+    "i second this","omg what is this? hahahaha",
+    "I tried it. Definitely not for me. Glad you like it though ness","hahahhaa",
+    "Will be at FSS in like 40 mins or so","Are u guys going for a drink after work?",
+    "how long u guys gonna be out tonight for dranks?","was i nom for the project?",
+    "so mysterious ness","omg nads u look so nice","these photos are actually great",
+    "no one be looking at mine though today thanks","I timtams do we have some?",
+    "andrea and lils ones are sooo good","the friendly ones are great",
+    "Im meeting a friend later on in city"
+  ]},
+  rhiannon: { name: "Rhiannon Ruediger", pool: [
+    "Princess","Those are actually for everyone except Tom",
+    "Do we put this with a photo of you in get the memo?",
+    "I wont be able to but I would like a summary written by you both then translated with AI",
+    "Skull","clicked randomise, and..","Cake!",
+    "PSA: There will be cakes in the kitchen at 11:15 to celebrate the April birthdays!",
+    "Solo party for Liam","Nope! I for one, am not used in bids",
+    "Do I say.... discrimination!!","Toe",
+    "ooft Thats like someone here spelling it architetcure",
+    "Can you please pop them into a plastic tub to avoid the smell permeating the clothes hanging in there?"
+  ]},
+  chris: { name: "Chris Buchhorn", pool: [
+    "hey - I am thinking about drinks at fifty five after work if you are up for it/available",
+    "anyone keen for a quick one","it is AI","monties","OK, Nads is cooked",
+    "shared responsibility","I endorse this message","Thursday is better","for me at least",
+    "ah, ok - I thought that was a question","haha - salad is nothing","Fifty five",
+    "an extended lunch came with consequences - who knew!",
+    "gotta support those struggling corprates",
+    "oui - most are away from computers atm though",
+    "I will be braving into the night after too","I was otherwise engage"
+  ]},
+  meg: { name: "Meg O'Halloran", pool: [
+    "Thanks Rhi","THANKS RYAN","CAPS MOOD TODAY","whats everyones fave biscuits",
+    "whats monties","dunno if they exist at woolies","they slap actually ryan",
+    "Ryan saving the company","Chris ghosting the chat","I dunno about those pink Jam biscuits",
+    "just popped them in the container",
+    "wait what are they all gone? I literally put them about approx. 2min ago",
+    "my mate came back","excuse me","3pm drinks today","scrap that guys",
+    "I know all about architecture guys","I reckon I could start putting drinks out",
+    "Koulouriakia Slam? Not exactly the same ring to it as timtam slam",
+    "Traveller ched","THESE WERE OUT OF STOCK SOZZZZ"
+  ]},
+  jenny: { name: "Jenny Watson", pool: [
+    "Jawads preso starting now in Blue Room, drinks & snacks included!",
+    "A Creature visited today","Peters mouse",
+    "Update from home: my orange boy drinking his Special Tea* while reclining.",
+    "can you please record watto"
+  ]},
+  jeremy: { name: "Jeremy Stewart", pool: [
+    "i knew that guy was magic","the force is strong that one with",
+    "you sure he isnt a doctor?",
+    "shouldnt victor be inside in a darkened room convalescing - outrageous",
+    "sure he is - is he also strengthening his hand by lifting glasses of vodka?",
+    "does anyone else get a headache / visual aura from the glare off their desk in the afternoon"
+  ]},
+  howard: { name: "Howard Raggatt", pool: ["Can we do it another day","Too","Honorary"] },
+  ark: { name: "Ark Belov", pool: [
+    "Buy 1 get 1 free at the new ban mi shop on Flinders lne","Whoops thats tomorrow",
+    "So thats buy 1 get 1 free, I would expect a sellout and a line down the street around lunchtime"
+  ]},
+  aaron: { name: "Aaron Poupard", pool: ["Koulouriakia Slam?","Not exactly the same ring to it as timtam slam"] },
+  neil: { name: "Neil Masterton", pool: [".;'","(thumbs up)","(thumbs up)","(thumbs up)"] },
+  svetlana: { name: "Svetlana Glavenko", pool: [
+    "Looks like he is Almighty Lord","Babies waiting for parents","Relaxation yoga",
+    "Chilling outside","Talking to daddy",
+    "Victor is practicing some convalescence breathing techniques outside, new approach to dealing with illness.",
+    "Not vodka, cognac, thats his preference, or rose."
+  ]},
+  lucy: { name: "Lucy Carruthers", pool: [
+    "Roo vs Boo* *my brothers cat","Surely an accident?",
+    "Can confirm not intentional lol","Ok need to send a new one tmrw haha"
+  ]},
+  andrew: { name: "Andrew Lilleyman", pool: ["stay very still","Whos the prey... Peter?","its lap time."] },
+  kirsten: { name: "Kirsten Trengove", pool: ["Poppet!"] },
+  steven: { name: "Steven Baleva", pool: [
+    "lol","yeah nah","jealous you all got a photoshoot",
+    "i was hesitant to send through a selfie knowing all of your capabilities with ai"
+  ]},
+  hannah: { name: "Hannah Kuek", pool: ["nice","rainbow"] }
 };
 
-// keyword routing — certain words pull certain NPCs in with a tailored line
-const TRIGGERS = [
-  // golf / rory
-  { keys: ["rory", "masters", "golf", "mcilroy"], npc: "liam", line: "any update on Rory btw" },
-  { keys: ["rory", "masters"], npc: "ryan", line: "For christs sake Liam! What is the latest on Rory at the masters?!" },
-  // biscuits
-  { keys: ["biscuit", "tim tam", "timtam"], npc: "tom", line: "I threw them in the bin. TimTams are back." },
-  { keys: ["biscuit", "wagon wheel", "anzac", "jammy", "dodger"], npc: "ryan", line: "wagon wheel supremacy actually" },
-  { keys: ["jammy", "dodger"], npc: "tom", line: "Sounds like a slur" },
-  { keys: ["jammy", "dodger"], npc: "nessie", line: "Jammmmmmy dodgers" },
-  // music
-  { keys: ["phonk", "music", "spotify", "playlist", "song", "carioca", "bossa", "montagem"], npc: "nessie", line: "give this a crack" },
-  { keys: ["phonk", "mu
+var TRIGGERS = [
+  { keys: ["rory","masters","golf","mcilroy"], npc: "liam", line: "any update on Rory btw" },
+  { keys: ["rory","masters"], npc: "ryan", line: "For christs sake Liam! What is the latest on Rory at the masters?!" },
+  { keys: ["biscuit","tim tam","timtam"], npc: "tom", line: "I threw them in the bin. TimTams are back." },
+  { keys: ["biscuit","wagon wheel","anzac","jammy","dodger"], npc: "ryan", line: "wagon wheel supremacy actually" },
+  { keys: ["jammy","dodger"], npc: "tom", line: "Sounds like a slur" },
+  { keys: ["jammy","dodger"], npc: "nessie", line: "Jammmmmmy dodgers" },
+  { keys: ["phonk","music","spotify","playlist","song","carioca","bossa","montagem"], npc: "nessie", line: "give this a crack" },
+  { keys: ["phonk","music"], npc: "liam", line: "happy to go back under my rock" },
+  { keys: ["phonk"], npc: "axeris", line: "Oh I am very much on Montagem-tok as well" },
+  { keys: ["lunch","food","hungry","burger","beef"], npc: "nessie", line: "so is there lunch or wot" },
+  { keys: ["lunch","food"], npc: "axeris", line: "yeh I reckon" },
+  { keys: ["burger","beef","pub"], npc: "tom", line: "I am vibing a pub burger, something big and beefy" },
+  { keys: ["drink","beer","pub","fifty five","55"], npc: "chris", line: "hey - fifty five after work if you are up for it?" },
+  { keys: ["drink","beer","pub"], npc: "isabella", line: "revs?" },
+  { keys: ["drink","beer"], npc: "liam", line: "hell yeah" },
+  { keys: ["tom","portrait","lean"], npc: "isabella", line: "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I have seen it" },
+  { keys: ["tom","stand"], npc: "tom", line: "I lean more than stand" },
+  { keys: ["tom"], npc: "nadia", line: "DOES ANYONE HAVE A PHOTO OF TOM STANDING PLS" },
+  { keys: ["nac","promotion","promo"], npc: "axeris", line: "early may" },
+  { keys: ["nac","promotion"], npc: "nessie", line: "fkkk 2 weeks silence" },
+  { keys: ["mario","movie","kino","cinema"], npc: "isabella", line: "Im down" },
+  { keys: ["mario","movie"], npc: "rhiannon", line: "I wont be able to but I would like a summary written by you both then translated with AI" },
+  { keys: ["tiktok","social","instagram","reel"], npc: "nessie", line: "we really need an ARM tiktok to platform this cultural production" },
+  { keys: ["tiktok"], npc: "axeris", line: "they will totally go for an ARM tiktok and it will be the cringiest shit ever" },
+  { keys: ["website","site","mra","branch","research"], npc: "nessie", line: "MRA. affiliated but separate" },
+  { keys: ["website"], npc: "ryan", line: "Dan Go for President" },
+  { keys: ["meeting","transcript","minutes"], npc: "axeris", line: "meeting transcripts hit different" },
+  { keys: ["fortune","cookie","godan"], npc: "ryan", line: "Dan Go for President" },
+  { keys: ["fortune","cookie"], npc: "nessie", line: "fk this is so good again" },
+  { keys: ["fortune","cookie"], npc: "tom", line: "this is wonderful" },
+  { keys: ["memo","get the memo"], npc: "ryan", line: "thats actually a decent get the memo" },
+  { keys: ["memo"], npc: "nessie", line: "we need to collectively lift for memos" },
+  { keys: ["kt","ai","yassif","makeup","director","phillipe"], npc: "axeris", line: "KT can AI but AI could never KT" },
+  { keys: ["yassif","makeup","director"], npc: "axeris", line: "Cant wait to see how this makeup artist yassifes the Directors" },
+  { keys: ["phillipe","bald","matte"], npc: "axeris", line: "Phillipe got some sick matte bald head makeup, looked lit" },
+  { keys: ["big","grunty","hammer","hamma"], npc: "nessie", line: "BIG + GRUNTY" },
+  { keys: ["hammer","hamma","golden"], npc: "nessie", line: "DA GOLDEN HAMMA" },
+  { keys: ["ark","stock","share","investment"], npc: "axeris", line: "ARK +29.1% HAHAHAHAHAHA" },
+  { keys: ["ark","stock"], npc: "nessie", line: "ARK GOLDEN SHOWER KING" },
+  { keys: ["stock"], npc: "nessie", line: "btw we dropped stocks quick hey" },
+  { keys: ["labubu","dickens","supreme"], npc: "nessie", line: "Charles dickens is the call, made by supreme labubu leader" },
+  { keys: ["sun","hot","weather"], npc: "nessie", line: "fk da sun" },
+  { keys: ["neil","thumbs"], npc: "ryan", line: "neil only knows the thumbs up emoji" },
+  { keys: ["neil"], npc: "axeris", line: "Neil piping up about making the trivia architecture related then not even gonna be here" },
+  { keys: ["thumbs"], npc: "axeris", line: "I cant tell which generation does thumbs ups genuinely and which does them pass-agg" },
+  { keys: ["trump","tower","deal"], npc: "tom", line: "put that one in our submission for trump tower GC" },
+  { keys: ["deal"], npc: "nessie", line: "Art of the deal" },
+  { keys: ["trivia","round","nm","quiz"], npc: "ryan", line: "Have an NM round" },
+  { keys: ["trivia","quiz"], npc: "axeris", line: "I have got just the powerpoint image to accompany that round..." },
+  { keys: ["kirsten","review","kt"], npc: "nessie", line: "should i get Kirsten to review" },
+  { keys: ["kirsten","review"], npc: "nadia", line: "yes" },
+  { keys: ["ratepayer","council","carpark"], npc: "nessie", line: "ratepayers or something idk" },
+  { keys: ["carpark"], npc: "axeris", line: "ye olde carpark smell like weewee" },
+  { keys: ["tommy","shining","redrum"], npc: "nessie", line: "HEEEERRRESSS TOMMY" },
+  { keys: ["hi","hello","hey","morning","yo"], npc: "tom", line: "cool man." },
+  { keys: ["hi","hello"], npc: "nessie", line: "fkkk" },
+  { keys: ["montie","montys","monties"], npc: "chris", line: "monties" },
+  { keys: ["montie","monty"], npc: "axeris", line: "chicken nuggets" },
+  { keys: ["digestive"], npc: "nadia", line: "them golden digestives" },
+  { keys: ["digestive"], npc: "nessie", line: "the gold digestives are lit - just had 2 in a sandwich with the coating in the centre face to face" },
+  { keys: ["jam dawg","jam dog"], npc: "ryan", line: "Jam Dawgs" },
+  { keys: ["jam dawg","jam dog"], npc: "meg", line: "THESE WERE OUT OF STOCK SOZZZZ" },
+  { keys: ["chedz","ched"], npc: "axeris", line: "CHEDZ" },
+  { keys: ["chedz","ched"], npc: "nessie", line: "chedz gave me illness" },
+  { keys: ["salada"], npc: "axeris", line: "no but actually - slaps" },
+  { keys: ["cube","cuberule"], npc: "ryan", line: "the cube rule of food identification" },
+  { keys: ["sandwich"], npc: "axeris", line: "Alignment sandwich : r/dndmemes" },
+  { keys: ["charles dickens"], npc: "nessie", line: "Charles dickens is just pub classic pub. $8 pints" },
+  { keys: ["arbory"], npc: "nessie", line: "arbory? ooooo" },
+  { keys: ["kao man gai","chicken rice","thai chicken"], npc: "nessie", line: "only place to get proper thai chicken and rice in Australia" },
+  { keys: ["kao man gai"], npc: "axeris", line: "not the best place, the ONLY place" },
+  { keys: ["ban mi","banh mi"], npc: "ark", line: "Buy 1 get 1 free at the new ban mi shop on Flinders lne" },
+  { keys: ["benito","bad bunny","gold coast","music hall"], npc: "nessie", line: "enjoy some pure cinema brought to you by artificial intelligence + benito" },
+  { keys: ["benito","bad bunny"], npc: "nadia", line: "sydney benito house" },
+  { keys: ["photo","photoshoot","headshot","portrait"], npc: "nessie", line: "they can save their money on me" },
+  { keys: ["staff photo","shoot"], npc: "axeris", line: "Everyone wear green outfits for the profile pic shot so you can be appropriately green screened" },
+  { keys: ["mcdougall"], npc: "nessie", line: "mcdougall looks like hes had work done" },
+  { keys: ["mcdougall"], npc: "axeris", line: "McDougall split" },
+  { keys: ["jj","slop"], npc: "nessie", line: "JJ vetoed my bad bunny backing track" },
+  { keys: ["slop","jj"], npc: "ryan", line: "JJ dreams of ARM Slop" },
+  { keys: ["dan stop"], npc: "axeris", line: "Dans arch-rival.. Dan Stop" },
+  { keys: ["mark","teams"], npc: "nessie", line: "Yipee, new teams message from Mark" },
+  { keys: ["cake","birthday"], npc: "rhiannon", line: "Cake!" },
+  { keys: ["birthday"], npc: "meg", line: "Thanks Rhi" },
+  { keys: ["shoe","smell","cupboard"], npc: "rhiannon", line: "Can you please pop them into a plastic tub to avoid the smell permeating the clothes hanging in there?" },
+  { keys: ["dan brown"], npc: "nadia", line: "thats brown dan" },
+  { keys: ["koulouriakia","greek","easter"], npc: "nessie", line: "Hi everyone, please help yourselves to some Greek easter treats on the kitchen bench." },
+  { keys: ["koulouriakia"], npc: "aaron", line: "Koulouriakia Slam?" },
+  { keys: ["cat","pet","creature","peter","rocco","vince","pepper","victor"], npc: "svetlana", line: "Babies waiting for parents" },
+  { keys: ["cat","pet"], npc: "jenny", line: "Update from home: my orange boy drinking his Special Tea* while reclining." },
+  { keys: ["eagle"], npc: "andrew", line: "Whos the prey... Peter?" },
+  { keys: ["victor"], npc: "jeremy", line: "shouldnt victor be inside in a darkened room convalescing - outrageous" },
+  { keys: ["vodka","cognac"], npc: "svetlana", line: "Not vodka, cognac, thats his preference, or rose." },
+  { keys: ["linkedin"], npc: "nessie", line: "ah yes the old repost to your personal linkedin to signal ur personal importance and fusing of your real personality with a corporate drone" },
+  { keys: ["linkedin"], npc: "axeris", line: "It is never too late to hustle" },
+  { keys: ["sauna","hot lobby"], npc: "axeris", line: "It is a fcking SAUNA in that lobby area rn" },
+  { keys: ["ebay","signed"], npc: "isabella", line: "I already got one mate. Im selling them on Ebay for $5 a pop" },
+  { keys: ["fury row","row"], npc: "ryan", line: "we endorse frugality over here in Fury Row" },
+  { keys: ["kanye","yeezy"], npc: "nessie", line: "yeee brooooo kanyeee broooo" },
+  { keys: ["kanye","visa"], npc: "tom", line: "i thought his visa was revoked ..." },
+  { keys: ["architectus"], npc: "nessie", line: "we are a clean cut architectus type place ready to be bought by architectus" },
+  { keys: ["speakerboxx","outkast","love below"], npc: "liam", line: "That Speakerboxx/Love Below is a classic" },
+  { keys: ["howard","raggatt"], npc: "howard", line: "Honorary" },
+  { keys: ["sip and send"], npc: "nessie", line: "what did i miss on sip and send" },
+  { keys: ["sip and send"], npc: "tom", line: "Gen X talking to Gen Y about Gen Z?" },
+  { keys: ["foot","toe"], npc: "rhiannon", line: "Toe" },
+  { keys: ["foot","toe"], npc: "axeris", line: "Lots of foot pics, feel like I should be on a paid subscriber tier to see those" },
+  { keys: ["pink jam","pink biscuit"], npc: "meg", line: "I dunno about those pink Jam biscuits" },
+  { keys: ["pink jam"], npc: "ryan", line: "you had me at pink jam biscuit" },
+  { keys: ["tim tam","timtam"], npc: "ryan", line: "also, I take back every bad thing I have ever said about whoever got the tim tams. That is top notch selecting" },
+  { keys: ["president","presidente","el presidente"], npc: "liam", line: "El Presidente" }
+];
+
+var CHAIN_REACTIONS = {
+  nessie: [{ npc: "axeris", line: "Nessie I am confiscating your keyboard, no more typing for you" }],
+  tom: [{ npc: "isabella", line: "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I have seen it" }],
+  liam: [{ npc: "ryan", line: "cant afford not to" }],
+  axeris: [{ npc: "nadia", line: "thanks Ax" }],
+  ryan: [{ npc: "nessie", line: "good work" }]
+};
+
+var NADIA_STICKER_SVG = '<svg viewBox="0 0 100 100" width="72" height="72" xmlns="http://www.w3.org/2000/svg">' +
+  '<defs><radialGradient id="f" cx="0.35" cy="0.3" r="0.75"><stop offset="0" stop-color="#ffe680"/><stop offset="0.6" stop-color="#f7c948"/><stop offset="1" stop-color="#c48a1a"/></radialGradient></defs>' +
+  '<circle cx="50" cy="45" r="38" fill="url(#f)" stroke="#8a5a00" stroke-width="1.2"/>' +
+  '<ellipse cx="38" cy="42" rx="4" ry="5" fill="#1a1a1a"/>' +
+  '<ellipse cx="62" cy="42" rx="4" ry="5" fill="#1a1a1a"/>' +
+  '<path d="M32 36 Q38 32 44 36" stroke="#6b4300" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+  '<path d="M56 36 Q62 32 68 36" stroke="#6b4300" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+  '<path d="M40 62 Q50 58 60 62" stroke="#6b4300" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+  '<ellipse cx="40" cy="85" rx="10" ry="7" fill="#fff" stroke="#555" stroke-width="0.8"/>' +
+  '<ellipse cx="60" cy="85" rx="10" ry="7" fill="#fff" stroke="#555" stroke-width="0.8"/>' +
+  '<path d="M40 78 Q50 72 60 78" fill="#fff" stroke="#555" stroke-width="0.8"/>' +
+  '</svg>';
+
+function pick(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+function render(npcKey, text, isMe, opts){
+  opts = opts || {};
+  var div = document.createElement("div");
+  div.className = "msg" + (isMe ? " me" : "");
+  var who = document.createElement("div");
+  who.className = "who";
+  who.textContent = isMe ? "Dan Go" : NPCS[npcKey].name;
+  div.appendChild(who);
+  if (opts.sticker){
+    var s = document.createElement("div");
+    s.className = "sticker";
+    s.innerHTML = NADIA_STICKER_SVG;
+    div.appendChild(s);
+  } else {
+    var t = document.createElement("div");
+    t.className = "text";
+    t.textContent = text;
+    div.appendChild(t);
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function pickResponders(userText){
+  var t = userText.toLowerCase();
+  var responders = [];
+  var seen = {};
+
+  Object.keys(NPCS).forEach(function(key){
+    var first = NPCS[key].name.split(" ")[0].toLowerCase();
+    if (t.indexOf(first) !== -1 || t.indexOf("@" + key) !== -1){
+      responders.push({ npc: key, line: pick(NPCS[key].pool) });
+      seen[key + "|direct"] = true;
+    }
+  });
+
+  for (var i = 0; i < TRIGGERS.length; i++){
+    var trig = TRIGGERS[i];
+    if (!NPCS[trig.npc] || !trig.line) continue;
+    var hit = false;
+    for (var j = 0; j < trig.keys.length; j++){
+      if (t.indexOf(trig.keys[j]) !== -1){ hit = true; break; }
+    }
+    if (hit){
+      var sig = trig.npc + "|" + trig.line;
+      if (!seen[sig]){
+        responders.push({ npc: trig.npc, line: trig.line });
+        seen[sig] = true;
+      }
+    }
+  }
+
+  var trimmed = userText.trim();
+  var isQuestion = /\?$/.test(trimmed) || /^(what|who|where|when|why|how|is|are|do|does|did|can|should|could)\b/i.test(trimmed);
+  if (isQuestion && Math.random() < 0.7){
+    responders.push({ npc: "nadia", line: pick(["-.-","yes","omg","thanks all"]) });
+  }
+
+  if (responders.length === 0){
+    var allKeys = Object.keys(NPCS);
+    var extras = 2 + Math.floor(Math.random() * 2);
+    for (var k = 0; k < extras; k++){
+      var npc = pick(allKeys);
+      responders.push({ npc: npc, line: pick(NPCS[npc].pool) });
+    }
+  } else if (Math.random() < 0.5){
+    var allKeys2 = Object.keys(NPCS);
+    var npc2 = pick(allKeys2);
+    responders.push({ npc: npc2, line: pick(NPCS[npc2].pool) });
+  }
+
+  return responders.slice(0, 5);
+}
+
+function typeAndSend(npcKey, text, delay){
+  return new Promise(function(resolve){
+    setTimeout(function(){
+      typing.textContent = NPCS[npcKey].name + " is typing ...";
+      if (npcKey === "nadia" && Math.random() < 0.125){
+        setTimeout(function(){
+          typing.textContent = "";
+          render(npcKey, "", false, { sticker: true });
+          resolve();
+        }, 700);
+        return;
+      }
+      setTimeout(function(){
+        typing.textContent = "";
+        render(npcKey, text, false);
+        resolve();
+      }, 500 + text.length * 20);
+    }, delay);
+  });
+}
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+  var text = input.value.trim();
+  if (!text) return;
+  render(null, text, true);
+  input.value = "";
+
+  var responders = pickResponders(text);
+  var delay = 400;
+  var lastNpc = null;
+  var chain = Promise.resolve();
+  responders.forEach(function(r){
+    chain = chain.then(function(){
+      return typeAndSend(r.npc, r.line, delay);
+    }).then(function(){
+      delay = 200 + Math.floor(Math.random() * 600);
+      lastNpc = r.npc;
+    });
+  });
+  chain.then(function(){
+    if (lastNpc && CHAIN_REACTIONS[lastNpc] && Math.random() < 0.45){
+      var riff = pick(CHAIN_REACTIONS[lastNpc]);
+      return typeAndSend(riff.npc, riff.line, 800);
+    }
+  });
+});
+
+window.addEventListener("load", function(){
+  setTimeout(function(){ render("nessie","so is there lunch or wot", false); }, 300);
+  setTimeout(function(){ render("axeris","yeh I reckon", false); }, 900);
+  setTimeout(function(){ render("tom","I lean more than stand", false); }, 1600);
+});
+</script>
+</body>
+</html>
