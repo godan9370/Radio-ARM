@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RADIO ARM</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #d9d9d4;
+    color: #111;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    max-width: 720px;
+    margin: 0 auto;
+    border-left: 1px solid #111;
+    border-right: 1px solid #111;
+  }
+  header {
+    padding: 24px 24px 16px 24px;
+    border-bottom: 1px solid #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.35em;
+  }
+  .title .lg {
+    display: block;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+  }
+  .meta {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    text-align: right;
+    line-height: 1.6;
+  }
+  #chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 24px;
+  }
+  .msg {
+    margin-bottom: 14px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .who {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 2px;
+    opacity: 0.7;
+  }
+  .me .who { color: #000; opacity: 1; }
+  .text { white-space: pre-wrap; }
+  .me { text-align: right; }
+  .system {
+    text-align: center;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    opacity: 0.5;
+    margin: 24px 0;
+  }
+  form {
+    display: flex;
+    border-top: 1px solid #111;
+    background: #d9d9d4;
+  }
+  input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    padding: 18px 24px;
+    font-family: inherit;
+    font-size: 13px;
+    color: #111;
+    outline: none;
+    letter-spacing: 0.02em;
+  }
+  input::placeholder {
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 10px;
+    color: #555;
+  }
+  button {
+    border: 0;
+    border-left: 1px solid #111;
+    background: #111;
+    color: #d9d9d4;
+    padding: 0 24px;
+    font-family: inherit;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+  }
+  button:hover { background: #000; }
+  .typing {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    opacity: 0.6;
+    padding: 4px 0;
+    height: 18px;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: #111; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      Broadcast //
+      <span class="lg">RADIO ARM</span>
+    </div>
+    <div class="meta">
+      Frequency 27.3<br>
+      ALL STAFF / OPEN
+    </div>
+  </header>
+
+  <div id="chat">
+    <div class="system">— channel open —</div>
+  </div>
+
+  <div class="typing" id="typing"></div>
+
+  <form id="form" autocomplete="off">
+    <input id="input" placeholder="Transmit ..." />
+    <button type="submit">Send</button>
+  </form>
+
+<script>
+const chat = document.getElementById('chat');
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const typing = document.getElementById('typing');
+
+const NPCS = {
+  nessie: {
+    name: "Nessie Frangos",
+    pool: [
+      "fkkk", "fk this is so good", "omg", "love it all", "give it a crack",
+      "tiktok phonk is my new lock in genre", "we need to collectively lift for memos",
+      "is the jury still out on nac btw", "bossa nova", "funk carioca",
+      "yeah whats the hold up", "dress as your daylist", "revit beamer core",
+      "some tolerance for different tastes", "good work", "proud of u",
+      "btw we dropped stocks quick hey", "this is wonderful again",
+      "i corroborate this observation", "photos etc", "MRA, affiliated but separate",
+      "Charles dickens is the call", "made by supreme labubu leader",
+      "fk da sun", "Jammmmmmy dodgers", "elite jokesters", "slayfam",
+      "ARK GOLDEN SHOWER KING", "goddammit i thought i had figured it out",
+      "should i get Kirsten to review", "BIG + GRUNTY", "Big and Grunty",
+      "going to try use that as much as i can", "DA GOLDEN HAMMA",
+      "ratepayers or something idk", "HEEEERRRESSS TOMMY",
+      "Smile harder with your eyes Nessie!", "Art of the deal",
+      "I cooked it a bit too much"
+    ]
+  },
+  tom: {
+    name: "Tom Jones",
+    pool: [
+      "bargain", "Brutal", "no.", "I lean more than stand",
+      "I threw them in the bin. TimTams are back.", "cool man.",
+      "I'll give you a signed copy if you ask nicely", "glorious",
+      "it's like they really know me", "Easter break though",
+      "I'm vibing a pub burger", "something big and beefy",
+      "Sounds like a slur", "uncanny", "beautiful shot",
+      "put that one in our submission for trump tower GC"
+    ]
+  },
+  ryan: {
+    name: "Ryan Poppins",
+    pool: [
+      "Dan Go for President", "can't afford not to", "i didn't even know",
+      "thats actually a decent get the memo",
+      "For christs sake Liam! What is the latest on Rory at the masters?!",
+      "i feel seen and attacked at the same time",
+      "massive shout out to whoever snuck the wagon wheels into the biscuit tin rotation. you deserve to be crowned for that move",
+      "you've had a good run mate but I just talked to HR and you are outta here. clean the desk up",
+      "neil only knows the thumbs up emoji", "this is his version of slayfam",
+      "Have an NM round", "Nessie wins ARM $65,000,000,000 project",
+      "Nessie promoted to overload director", "this is my new CV"
+    ]
+  },
+  nadia: {
+    name: "Nadia Poppen",
+    pool: [
+      "thanks all", "-.-", "DOES ANYONE HAVE A PHOTO OF TOM STANDING PLS",
+      "just archiving this", "the original crop of the image",
+      "is the jury still out on nac btw?", "yes", "omg", "thanks Ax"
+    ]
+  },
+  axeris: {
+    name: "Axeris Sondyre",
+    pool: [
+      "Why does this look like I'm being lured into a kill room",
+      "He's saying what we're all thinking",
+      "Mood was good coming out of the in-person meeting 2 weeks back but don't think we've heard anything since",
+      "YT Music users discrimination",
+      "Oh I'm very much on Montagem-tok as well",
+      "not like KFC Portugal tiktok, that shit slaps",
+      "they'll totally go for an ARM tiktok and it'll be the cringiest shit ever",
+      "I'm in", "I knew he could do it", "early may",
+      "meeting transcripts hit different", "put her on the big screen",
+      "Louis XVI and Robespierre, 21 January 1793 (colourised)",
+      "what are these ...", "artwork accepted",
+      "I can't tell which generation does thumbs ups genuinely and which does them pass-agg",
+      "Neil piping up about making the trivia architecture related then not even gonna be here",
+      "I've got just the powerpoint image to accompany that round...",
+      "ye olde carpark smell like weewee", "ARK +29.1% HAHAHAHAHAHA",
+      "how is it even up for u, it should be in deployment...",
+      "Nessie I'm confiscating your keyboard, no more typing for you",
+      "omg its using Radio ARM to define value",
+      "KT can AI but AI could never KT",
+      "get her to do one for each project",
+      "teams gifs didn't understand that I wanted an animation of FMC",
+      "imo just repurpose the flowery language in the studio launch, it'll fit",
+      "I like that the Nessie text got smaller",
+      "Can't wait to see how this makeup artist yassifes the Directors",
+      "update on yassification?", "Phillipe got some sick matte bald head makeup",
+      "looked lit"
+    ]
+  },
+  liam: {
+    name: "Liam McKiernan",
+    pool: [
+      "Fuckin hell man", "hell yeah", "Pad Thai",
+      "happy to go back under my rock", "tried to broaden my horizons",
+      "gave it a go", "Them anzac biscuits hittin' diff",
+      "But Rory is now leading -12 going into the 3rd day of the masters",
+      "he dedicated the win to all the warriors on level 27 at 303 Collins Street",
+      "Let me know where the gang ends up",
+      "First Immigration, now the youth of Melbourne taking pops at me",
+      "I gotta be in Prahran for like 6.30 but sounds good",
+      "I can get around Funk Carioca", "who thought this slide was a good idea now"
+    ]
+  },
+  isabella: {
+    name: "Isabella Konig",
+    pool: [
+      "revs?", "only on a Tuesday bruv", "Im down",
+      "I already got one mate. Im selling them on Ebay for $5 a pop",
+      "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I've seen it",
+      "and then translated back by us doing our best mario impression",
+      "i second this", "omg what is this? hahahaha",
+      "I tried it. Definitely not for me. Glad you like it though ness",
+      "hahahhaa"
+    ]
+  },
+  rhiannon: {
+    name: "Rhiannon Ruediger",
+    pool: [
+      "Princess", "Those are actually for everyone except Tom",
+      "Do we put this with a photo of you in get the memo?",
+      "I wont be able to but I would like a summary written by you both then translated with AI",
+      "Skull", "clicked randomise, and.."
+    ]
+  },
+  steven: {
+    name: "Steven Baleva",
+    pool: ["🥲", "lol", "yeah nah"]
+  },
+  chris: {
+    name: "Chris Buchhorn",
+    pool: [
+      "hey - I'm thinking about drinks at fifty five after work if you're up for it/available",
+      "anyone keen for a quick one"
+    ]
+  }
+};
+
+// keyword routing — certain words pull certain NPCs in with a tailored line
+const TRIGGERS = [
+  // golf / rory
+  { keys: ["rory", "masters", "golf", "mcilroy"], npc: "liam", line: "any update on Rory btw" },
+  { keys: ["rory", "masters"], npc: "ryan", line: "For christs sake Liam! What is the latest on Rory at the masters?!" },
+  // biscuits
+  { keys: ["biscuit", "tim tam", "timtam"], npc: "tom", line: "I threw them in the bin. TimTams are back." },
+  { keys: ["biscuit", "wagon wheel", "anzac", "jammy", "dodger"], npc: "ryan", line: "wagon wheel supremacy actually" },
+  { keys: ["jammy", "dodger"], npc: "tom", line: "Sounds like a slur" },
+  { keys: ["jammy", "dodger"], npc: "nessie", line: "Jammmmmmy dodgers" },
+  // music
+  { keys: ["phonk", "music", "spotify", "playlist", "song", "carioca", "bossa", "montagem"], npc: "nessie", line: "give this a crack" },
+  { keys: ["phonk", "music"], npc: "liam", line: "happy to go back under my rock" },
+  { keys: ["phonk"], npc: "axeris", line: "Oh I'm very much on Montagem-tok as well" },
+  // food / lunch
+  { keys: ["lunch", "food", "hungry", "burger", "beef"], npc: "nessie", line: "so is there lunch or wot" },
+  { keys: ["lunch", "food"], npc: "axeris", line: "yeh I reckon" },
+  { keys: ["burger", "beef", "pub"], npc: "tom", line: "I'm vibing a pub burger, something big and beefy" },
+  // drinks
+  { keys: ["drink", "beer", "pub", "fifty five", "55"], npc: "chris", line: "hey — fifty five after work if you're up for it?" },
+  { keys: ["drink", "beer", "pub"], npc: "isabella", line: "revs?" },
+  { keys: ["drink", "beer"], npc: "liam", line: "hell yeah" },
+  // tom / portraits
+  { keys: ["tom", "portrait", "lean"], npc: "isabella", line: "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I've seen it" },
+  { keys: ["tom", "stand"], npc: "tom", line: "I lean more than stand" },
+  { keys: ["tom"], npc: "nadia", line: "DOES ANYONE HAVE A PHOTO OF TOM STANDING PLS" },
+  // nac / promo
+  { keys: ["nac", "promotion", "promo"], npc: "axeris", line: "early may" },
+  { keys: ["nac", "promotion"], npc: "nessie", line: "fkkk 2 weeks silence" },
+  // mario / movies / kino
+  { keys: ["mario", "movie", "kino", "cinema"], npc: "isabella", line: "Im down" },
+  { keys: ["mario", "movie"], npc: "rhiannon", line: "I wont be able to but I would like a summary written by you both then translated with AI" },
+  // tiktok / social
+  { keys: ["tiktok", "social", "instagram", "reel"], npc: "nessie", line: "we really need an ARM tiktok to platform this cultural production" },
+  { keys: ["tiktok"], npc: "axeris", line: "they'll totally go for an ARM tiktok and it'll be the cringiest shit ever" },
+  // arm website / MRA
+  { keys: ["website", "site", "mra", "branch", "research"], npc: "nessie", line: "MRA. affiliated but separate" },
+  { keys: ["website"], npc: "ryan", line: "Dan Go for President" },
+  // meetings
+  { keys: ["meeting", "transcript", "minutes"], npc: "axeris", line: "meeting transcripts hit different" },
+  // dan go / fortune cookie
+  { keys: ["fortune", "cookie", "godan"], npc: "ryan", line: "Dan Go for President" },
+  { keys: ["fortune", "cookie"], npc: "nessie", line: "fk this is so good again" },
+  { keys: ["fortune", "cookie"], npc: "tom", line: "this is wonderful" },
+  // memo / get the memo
+  { keys: ["memo", "get the memo"], npc: "ryan", line: "thats actually a decent get the memo" },
+  { keys: ["memo"], npc: "nessie", line: "we need to collectively lift for memos" },
+  // KT / AI / yassify / makeup / directors
+  { keys: ["kt", "ai", "yassif", "makeup", "director", "phillipe"], npc: "axeris", line: "KT can AI but AI could never KT" },
+  { keys: ["yassif", "makeup", "director"], npc: "axeris", line: "Can't wait to see how this makeup artist yassifes the Directors" },
+  { keys: ["phillipe", "bald", "matte"], npc: "axeris", line: "Phillipe got some sick matte bald head makeup, looked lit" },
+  // Big and grunty
+  { keys: ["big", "grunty", "hammer", "hamma"], npc: "nessie", line: "BIG + GRUNTY" },
+  { keys: ["hammer", "hamma", "golden"], npc: "nessie", line: "DA GOLDEN HAMMA" },
+  // ARK / stocks
+  { keys: ["ark", "stock", "share", "investment"], npc: "axeris", line: "ARK +29.1% HAHAHAHAHAHA" },
+  { keys: ["ark", "stock"], npc: "nessie", line: "ARK GOLDEN SHOWER KING" },
+  { keys: ["stock"], npc: "nessie", line: "btw we dropped stocks quick hey" },
+  // labubu / dickens
+  { keys: ["labubu", "dickens", "supreme"], npc: "nessie", line: "Charles dickens is the call, made by supreme labubu leader" },
+  // sun / weather
+  { keys: ["sun", "hot", "weather"], npc: "nessie", line: "fk da sun" },
+  // neil / thumbs up
+  { keys: ["neil", "thumbs", "👍"], npc: "ryan", line: "neil only knows the thumbs up emoji" },
+  { keys: ["neil"], npc: "axeris", line: "Neil piping up about making the trivia architecture related then not even gonna be here" },
+  { keys: ["thumbs"], npc: "axeris", line: "I can't tell which generation does thumbs ups genuinely and which does them pass-agg" },
+  // trump / deal
+  { keys: ["trump", "tower", "deal"], npc: "tom", line: "put that one in our submission for trump tower GC" },
+  { keys: ["deal"], npc: "nessie", line: "Art of the deal" },
+  // trivia / NM / round
+  { keys: ["trivia", "round", "nm", "quiz"], npc: "ryan", line: "Have an NM round" },
+  { keys: ["trivia", "quiz"], npc: "axeris", line: "I've got just the powerpoint image to accompany that round..." },
+  // kirsten / review
+  { keys: ["kirsten", "review", "kt"], npc: "nessie", line: "should i get Kirsten to review" },
+  { keys: ["kirsten", "review"], npc: "nadia", line: "yes" },
+  // ratepayers / council
+  { keys: ["ratepayer", "council", "carpark"], npc: "nessie", line: "ratepayers or something idk" },
+  { keys: ["carpark"], npc: "axeris", line: "ye olde carpark smell like weewee" },
+  // tommy / heeere's
+  { keys: ["tommy", "shining", "redrum"], npc: "nessie", line: "HEEEERRRESSS TOMMY" },
+  // greetings
+  { keys: ["hi", "hello", "hey", "morning", "yo"], npc: "tom", line: "cool man." },
+  { keys: ["hi", "hello"], npc: "nessie", line: "fkkk" }
+];
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function render(npcKey, text, isMe) {
+  const div = document.createElement('div');
+  div.className = 'msg' + (isMe ? ' me' : '');
+  const who = document.createElement('div');
+  who.className = 'who';
+  who.textContent = isMe ? "Dan Go" : NPCS[npcKey].name;
+  const t = document.createElement('div');
+  t.className = 'text';
+  t.textContent = text;
+  div.appendChild(who);
+  div.appendChild(t);
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function pickResponders(userText) {
+  const t = userText.toLowerCase();
+  const responders = [];
+  const seen = new Set();
+
+  // 1. direct address — if a name is in the message, that NPC responds first
+  for (const key of Object.keys(NPCS)) {
+    const first = NPCS[key].name.split(" ")[0].toLowerCase();
+    if (t.includes(first) || t.includes("@" + key)) {
+      const line = pick(NPCS[key].pool);
+      responders.push({ npc: key, line });
+      seen.add(key);
+    }
+  }
+
+  // 2. collect keyword-triggered NPCs
+  for (const trig of TRIGGERS) {
+    if (trig.keys.some(k => t.includes(k))) {
+      const sig = trig.npc + "|" + trig.line;
+      if (!seen.has(sig)) {
+        responders.push({ npc: trig.npc, line: trig.line });
+        seen.add(sig);
+      }
+    }
+  }
+
+  // 3. questions get extra chatter
+  const isQuestion = /\?$/.test(userText.trim()) || /^(what|who|where|when|why|how|is|are|do|does|did|can|should|could)\b/i.test(userText.trim());
+  if (isQuestion && Math.random() < 0.7) {
+    responders.push({ npc: "nadia", line: pick(["-.-", "yes", "omg", "thanks all"]) });
+  }
+
+  // 4. if nothing matched, fire 2-3 random reactions so chat never goes silent
+  if (responders.length === 0) {
+    const allKeys = Object.keys(NPCS);
+    const extras = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < extras; i++) {
+      const npc = pick(allKeys);
+      responders.push({ npc, line: pick(NPCS[npc].pool) });
+    }
+  } else {
+    // otherwise add a small chance of a random extra riff
+    if (Math.random() < 0.5) {
+      const allKeys = Object.keys(NPCS);
+      const npc = pick(allKeys);
+      responders.push({ npc, line: pick(NPCS[npc].pool) });
+    }
+  }
+
+  // cap at 5 to keep it readable
+  return responders.slice(0, 5);
+}
+
+// occasionally a second NPC quotes/riffs off the last NPC reply
+const CHAIN_REACTIONS = {
+  nessie: [{ npc: "axeris", line: "Nessie I'm confiscating your keyboard, no more typing for you" }],
+  tom: [{ npc: "isabella", line: "Tom Jones has a cataoulge of his portraits he carries around on him. Its laminated. I've seen it" }],
+  liam: [{ npc: "ryan", line: "can't afford not to" }],
+  axeris: [{ npc: "nadia", line: "thanks Ax" }],
+  ryan: [{ npc: "nessie", line: "good work" }]
+};
+
+async function typeAndSend(npcKey, text, delay) {
+  await new Promise(r => setTimeout(r, delay));
+  typing.textContent = NPCS[npcKey].name + " is typing ...";
+  await new Promise(r => setTimeout(r, 500 + text.length * 20));
+  typing.textContent = "";
+  render(npcKey, text, false);
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const text = input.value.trim();
+  if (!text) return;
+  render(null, text, true);
+  input.value = "";
+
+  const responders = pickResponders(text);
+  let delay = 400;
+  let lastNpc = null;
+  for (const r of responders) {
+    await typeAndSend(r.npc, r.line, delay);
+    delay = 200 + Math.floor(Math.random() * 600);
+    lastNpc = r.npc;
+  }
+
+  // chance of a chain riff after the user's burst lands
+  if (lastNpc && CHAIN_REACTIONS[lastNpc] && Math.random() < 0.45) {
+    const riff = pick(CHAIN_REACTIONS[lastNpc]);
+    await typeAndSend(riff.npc, riff.line, 800);
+  }
+});
+
+// seed a couple of opening messages
+window.addEventListener('load', () => {
+  setTimeout(() => render('nessie', 'so is there lunch or wot', false), 300);
+  setTimeout(() => render('axeris', 'yeh I reckon', false), 900);
+  setTimeout(() => render('tom', 'I lean more than stand', false), 1600);
+});
+</script>
+</body>
+</html>
